@@ -1,0 +1,4 @@
+node_modules/
+server/last-race.sqlite
+server/sessions.sqlite
+server/cookies.txt
