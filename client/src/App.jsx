@@ -5,6 +5,8 @@ import InstructionsPage from "./pages/InstructionsPage.jsx";
 import LoginPage from "./pages/LoginPage.jsx";
 import { useAuth } from "./context/AuthContext.jsx";
 import RankingPage from "./pages/RankingPage.jsx";
+import SetupPage from "./pages/SetupPage.jsx";
+
 
 function ProtectedRoute({ children }) {
   const { loggedIn, checkingSession } = useAuth();
@@ -47,7 +49,7 @@ function App() {
           path="/setup"
           element={
             <ProtectedRoute>
-              <PlaceholderPage title="Setup" />
+              <PlaceholderPage />
             </ProtectedRoute>
           }
         />
