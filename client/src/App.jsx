@@ -49,7 +49,7 @@ function App() {
           path="/setup"
           element={
             <ProtectedRoute>
-              <PlaceholderPage />
+              <SetupPage />
             </ProtectedRoute>
           }
         />
@@ -58,7 +58,7 @@ function App() {
           path="/ranking"
           element={
             <ProtectedRoute>
-              <PlaceholderPage />
+              <RankingPage />
             </ProtectedRoute>
           }
         />

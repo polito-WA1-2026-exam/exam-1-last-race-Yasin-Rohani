@@ -112,7 +112,25 @@ app.get("/api/ranking", isLoggedIn, async (req, res) => {
     res.status(500).json({ error: "Cannot load ranking" });
   }
 });
+app.get("/api/network/full", isLoggedIn, async (req, res) => {
+  try {
+    const network = await getFullNetwork();
+    res.json(network);
+  } catch (err) {
+    console.error("GET /api/network/full failed:", err);
+    res.status(500).json({ error: "Internal server error" });
+  }
+});
 
+app.get("/api/network/planning", isLoggedIn, async (req, res) => {
+  try {
+    const network = await getPlanningNetwork();
+    res.json(network);
+  } catch (err) {
+    console.error("GET /api/network/planning failed:", err);
+    res.status(500).json({ error: "Internal server error" });
+  }
+});
 app.post("/api/games", isLoggedIn, async (req, res) => {
   try {
     const pair = await selectRandomStartAndDestination();
