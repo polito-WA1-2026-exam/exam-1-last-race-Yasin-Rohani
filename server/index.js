@@ -131,6 +131,7 @@ app.get("/api/network/planning", isLoggedIn, async (req, res) => {
     res.status(500).json({ error: "Internal server error" });
   }
 });
+
 app.post("/api/games", isLoggedIn, async (req, res) => {
   try {
     const pair = await selectRandomStartAndDestination();
@@ -138,16 +139,17 @@ app.post("/api/games", isLoggedIn, async (req, res) => {
     const game = await createGame(
       req.user.id,
       pair.startStationId,
-      pair.destinationStationId
+      pair.destinationStationId,
+      pair.distance
     );
 
     res.status(201).json({
       ...game,
       minimumDistance: pair.distance
     });
-  } catch (err) {
-    console.error(err);
-    res.status(500).json({ error: "Cannot create game" });
+   } catch (err) {
+    console.error("POST /api/games failed:", err);
+    return res.status(500).json({ error: "Cannot create game" });
   }
 });
 
@@ -167,8 +169,8 @@ app.get("/api/games/:gameId", isLoggedIn, async (req, res) => {
 
     return res.json(game);
   } catch (err) {
-    console.error(err);
-    return res.status(500).json({ error: "Cannot load game" });
+    console.error("POST /api/games/:id/route failed:", err);
+    return res.status(500).json({ error: "Cannot submit route" });
   }
 });
 
@@ -204,9 +206,9 @@ app.post("/api/games/:gameId/route", isLoggedIn, async (req, res) => {
 
     return res.json(result);
   } catch (err) {
-    console.error(err);
-    return res.status(500).json({ error: "Cannot submit route" });
-  }
+     console.error("POST /api/games/:gameId/route failed:", err);
+     return res.status(500).json({ error: "Cannot submit route" });
+ }
 });
 app.use((err, req, res, next) => {
   console.error(err);

@@ -165,18 +165,19 @@ async function getRanking() {
   );
 }
 
-async function createGame(userId, startStationId, destinationStationId) {
+async function createGame(userId, startStationId, destinationStationId, minimumDistance) {
   const db = await dbPromise;
 
   const result = await db.run(
     `
-    INSERT INTO games 
-      (user_id, start_station_id, destination_station_id, status, score)
-    VALUES (?, ?, ?, 'planning', 20)
+      INSERT INTO games
+        (user_id, start_station_id, destination_station_id, status, score, minimum_distance)
+      VALUES (?, ?, ?, 'planning', 20, ?)
     `,
     userId,
     startStationId,
-    destinationStationId
+    destinationStationId,
+    minimumDistance
   );
 
   return getGameById(result.lastID, userId);
@@ -196,7 +197,8 @@ async function getGameById(gameId, userId) {
       dest.name AS destinationStationName,
       g.status,
       g.score,
-      g.created_at AS createdAt
+      g.created_at AS createdAt,
+      g.minimum_distance AS minimumDistance
     FROM games g
     JOIN stations start ON g.start_station_id = start.id
     JOIN stations dest ON g.destination_station_id = dest.id
