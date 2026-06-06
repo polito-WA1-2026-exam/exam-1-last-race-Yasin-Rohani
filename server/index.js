@@ -8,7 +8,11 @@ import { dbPromise } from "./db.js";
 import {
   getFullNetwork,
   getPlanningNetwork,
-  getRanking
+  getRanking,
+  createGame,
+  getGameById,
+  selectRandomStartAndDestination,
+  submitRoute
 } from "./dao.js";
 
 const app = express();
@@ -109,6 +113,83 @@ app.get("/api/ranking", isLoggedIn, async (req, res) => {
   }
 });
 
+app.post("/api/games", isLoggedIn, async (req, res) => {
+  try {
+    const pair = await selectRandomStartAndDestination();
+
+    const game = await createGame(
+      req.user.id,
+      pair.startStationId,
+      pair.destinationStationId
+    );
+
+    res.status(201).json({
+      ...game,
+      minimumDistance: pair.distance
+    });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: "Cannot create game" });
+  }
+});
+
+app.get("/api/games/:gameId", isLoggedIn, async (req, res) => {
+  try {
+    const gameId = Number(req.params.gameId);
+
+    if (!Number.isInteger(gameId) || gameId <= 0) {
+      return res.status(400).json({ error: "Invalid game id" });
+    }
+
+    const game = await getGameById(gameId, req.user.id);
+
+    if (!game) {
+      return res.status(404).json({ error: "Game not found" });
+    }
+
+    return res.json(game);
+  } catch (err) {
+    console.error(err);
+    return res.status(500).json({ error: "Cannot load game" });
+  }
+});
+
+app.post("/api/games/:gameId/route", isLoggedIn, async (req, res) => {
+  try {
+    const gameId = Number(req.params.gameId);
+
+    if (!Number.isInteger(gameId) || gameId <= 0) {
+      return res.status(400).json({ error: "Invalid game id" });
+    }
+
+    const { selectedSegmentIds } = req.body;
+
+    if (!Array.isArray(selectedSegmentIds)) {
+      return res.status(400).json({ error: "selectedSegmentIds must be an array" });
+    }
+
+    const parsedSegmentIds = selectedSegmentIds.map((id) => Number(id));
+
+    if (
+      parsedSegmentIds.some(
+        (id) => !Number.isInteger(id) || id <= 0
+      )
+    ) {
+      return res.status(400).json({ error: "All segment ids must be positive integers" });
+    }
+
+    const result = await submitRoute(gameId, req.user.id, parsedSegmentIds);
+
+    if (!result.game) {
+      return res.status(404).json(result);
+    }
+
+    return res.json(result);
+  } catch (err) {
+    console.error(err);
+    return res.status(500).json({ error: "Cannot submit route" });
+  }
+});
 app.use((err, req, res, next) => {
   console.error(err);
   res.status(500).json({ error: "Internal server error" });
