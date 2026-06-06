@@ -6,6 +6,7 @@ import LoginPage from "./pages/LoginPage.jsx";
 import { useAuth } from "./context/AuthContext.jsx";
 import RankingPage from "./pages/RankingPage.jsx";
 import SetupPage from "./pages/SetupPage.jsx";
+import PlanningPage from "./pages/PlanningPage.jsx";
 
 
 function ProtectedRoute({ children }) {
@@ -53,7 +54,14 @@ function App() {
             </ProtectedRoute>
           }
         />
-
+          <Route
+           path="/planning/:gameId"
+           element={
+             <ProtectedRoute>
+             <PlanningPage />
+             </ProtectedRoute>
+          }
+        />
         <Route
           path="/ranking"
           element={
