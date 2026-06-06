@@ -7,6 +7,7 @@ import { useAuth } from "./context/AuthContext.jsx";
 import RankingPage from "./pages/RankingPage.jsx";
 import SetupPage from "./pages/SetupPage.jsx";
 import PlanningPage from "./pages/PlanningPage.jsx";
+import ResultPage from "./pages/ResultPage.jsx";
 
 
 function ProtectedRoute({ children }) {
@@ -58,13 +59,21 @@ function App() {
            path="/planning/:gameId"
            element={
              <ProtectedRoute>
-             <PlanningPage />
+              <PlanningPage />
              </ProtectedRoute>
           }
         />
-        <Route
-          path="/ranking"
-          element={
+           <Route
+            path="/result/:gameId"
+            element={
+              <ProtectedRoute>
+                 <ResultPage />
+              </ProtectedRoute>
+           }
+        />
+              <Route
+            path="/ranking"
+            element={
             <ProtectedRoute>
               <RankingPage />
             </ProtectedRoute>
