@@ -4,6 +4,7 @@ import NavigationBar from "./components/NavigationBar.jsx";
 import InstructionsPage from "./pages/InstructionsPage.jsx";
 import LoginPage from "./pages/LoginPage.jsx";
 import { useAuth } from "./context/AuthContext.jsx";
+import RankingPage from "./pages/RankingPage.jsx";
 
 function ProtectedRoute({ children }) {
   const { loggedIn, checkingSession } = useAuth();
@@ -55,7 +56,7 @@ function App() {
           path="/ranking"
           element={
             <ProtectedRoute>
-              <PlaceholderPage title="Ranking" />
+              <PlaceholderPage />
             </ProtectedRoute>
           }
         />
