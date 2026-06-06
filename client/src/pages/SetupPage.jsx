@@ -12,6 +12,7 @@ import {
 } from "react-bootstrap";
 import { useNavigate } from "react-router";
 import API from "../api/API.js";
+import NetworkMap from "../components/NetworkMap.jsx";
 
 function SetupPage() {
   const [network, setNetwork] = useState(null);
@@ -78,6 +79,12 @@ function SetupPage() {
 
               {network && (
                 <>
+                    <NetworkMap
+                         stations={network.stations}
+                         segments={network.segments}
+                         segmentLines={network.segmentLines}
+                    />
+                    
                   <h2 className="h4 mt-3">Lines</h2>
                   <ListGroup className="mb-4">
                     {network.lines.map((line) => (
