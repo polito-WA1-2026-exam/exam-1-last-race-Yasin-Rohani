@@ -312,7 +312,13 @@ The project is implemented with:
 
 ## Screenshot
 
-![Screenshot](./img/screenshot.jpg)
+### Instructions page
+
+![Instructions page](./img/Screenshot_1.png)
+
+### Setup page
+
+![Setup page](./img/Screenshot_2.png)
 
 ---
 
