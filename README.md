@@ -242,9 +242,9 @@ The project is implemented with:
     - creation date
     - minimum distance
 
-- Table `game_routes`
-  - Stores the route selected by the user.
-  - Contains the selected segments and their order in the submitted route.
+- Table `game_steps`
+  - Stores the execution steps of a completed game.
+  - Contains the selected segment order, the travelled stations, the random event applied to each segment, the score variation, and the coins after each step.
 
 - Table `events`
   - Stores the possible game events.
@@ -312,15 +312,13 @@ The project is implemented with:
 
 ## Screenshot
 
-### Instructions page
+### General ranking page
 
-![Instructions page](./img/Screenshot_1.png)
+![General ranking page](./img/Screenshot_1.png)
 
-### Setup page
+### Planning phase during a game
 
-![Setup page](./img/Screenshot_2.png)
-
----
+![Planning phase during a game](./img/Screenshot_2.png)
 
 ## Users Credentials
 
@@ -332,6 +330,9 @@ The project is implemented with:
   - username: `bob@example.com`
   - password: `Password123!`
 
+- Charlie
+  - username: `charlie@example.com`
+  - password: `Password123!`
 ---
 
 ## Use of AI Tools

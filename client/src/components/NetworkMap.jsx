@@ -1,6 +1,11 @@
 import { Card } from "react-bootstrap";
 
-function NetworkMap({ stations, segments, segmentLines }) {
+function NetworkMap({
+  stations = [],
+  segments = [],
+  segmentLines = [],
+  showSegments = true
+}) {
   function getLineColor(segmentId) {
     const segmentLine = segmentLines?.find(
       (item) => item.segmentId === segmentId
@@ -26,29 +31,30 @@ function NetworkMap({ stations, segments, segmentLines }) {
             width="100%"
             height="420"
             role="img"
-            aria-label="Full underground network map"
+            aria-label="Underground network map"
           >
-            {segments.map((segment) => {
-              const station1 = getStationById(segment.station1Id);
-              const station2 = getStationById(segment.station2Id);
+            {showSegments &&
+              segments.map((segment) => {
+                const station1 = getStationById(segment.station1Id);
+                const station2 = getStationById(segment.station2Id);
 
-              if (!station1 || !station2) {
-                return null;
-              }
+                if (!station1 || !station2) {
+                  return null;
+                }
 
-              return (
-                <line
-                  key={segment.id}
-                  x1={station1.x}
-                  y1={station1.y}
-                  x2={station2.x}
-                  y2={station2.y}
-                  stroke={getLineColor(segment.id)}
-                  strokeWidth="8"
-                  strokeLinecap="round"
-                />
-              );
-            })}
+                return (
+                  <line
+                    key={segment.id}
+                    x1={station1.x}
+                    y1={station1.y}
+                    x2={station2.x}
+                    y2={station2.y}
+                    stroke={getLineColor(segment.id)}
+                    strokeWidth="8"
+                    strokeLinecap="round"
+                  />
+                );
+              })}
 
             {stations.map((station) => (
               <g key={station.id}>

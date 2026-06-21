@@ -15,10 +15,11 @@ import API from "../api/API.js";
 
 function ResultPage() {
   const { gameId } = useParams();
-
+  
   const [game, setGame] = useState(null);
   const [loading, setLoading] = useState(true);
   const [errorMessage, setErrorMessage] = useState("");
+  const [visibleStepsCount, setVisibleStepsCount] = useState(0);
 
   useEffect(() => {
     async function loadResult() {
@@ -34,6 +35,22 @@ function ResultPage() {
 
     loadResult();
   }, [gameId]);
+  
+    useEffect(() => {
+  if (!game?.steps || game.steps.length === 0) {
+    return;
+  }
+
+  if (visibleStepsCount >= game.steps.length) {
+    return;
+  }
+
+  const timerId = setTimeout(() => {
+    setVisibleStepsCount((current) => current + 1);
+  }, 1000);
+
+  return () => clearTimeout(timerId);
+}, [game, visibleStepsCount]);
 
   if (loading) {
     return (
@@ -85,7 +102,7 @@ function ResultPage() {
                       <h2 className="h4">Executed steps</h2>
 
                       <ListGroup className="mb-4">
-                        {game.steps.map((step) => (
+                        {game.steps.slice(0, visibleStepsCount).map((step) => (
                           <ListGroup.Item key={step.id}>
                             Step {step.stepNumber}:{" "}
                             <strong>{step.fromStationName}</strong> →{" "}

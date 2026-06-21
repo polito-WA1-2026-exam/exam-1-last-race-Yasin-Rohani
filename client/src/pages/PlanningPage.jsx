@@ -12,6 +12,7 @@ import {
 } from "react-bootstrap";
 import { useNavigate, useParams } from "react-router";
 import API from "../api/API.js";
+import NetworkMap from "../components/NetworkMap.jsx";
 
 function PlanningPage() {
   const { gameId } = useParams();
@@ -22,6 +23,7 @@ function PlanningPage() {
   const [selectedSegmentIds, setSelectedSegmentIds] = useState([]);
   const [loading, setLoading] = useState(true);
   const [submitting, setSubmitting] = useState(false);
+  const [timeLeft, setTimeLeft] = useState(90);
   const [errorMessage, setErrorMessage] = useState("");
 
   useEffect(() => {
@@ -51,6 +53,22 @@ function PlanningPage() {
       return [...currentIds, segmentId];
     });
   }
+      useEffect(() => {
+  if (loading || !game || submitting) {
+    return;
+  }
+
+  if (timeLeft <= 0) {
+    handleSubmitRoute();
+    return;
+  }
+
+  const timerId = setTimeout(() => {
+    setTimeLeft((current) => current - 1);
+  }, 1000);
+
+  return () => clearTimeout(timerId);
+}, [timeLeft, loading, game, submitting]);
 
   async function handleSubmitRoute() {
     setSubmitting(true);
@@ -89,17 +107,28 @@ function PlanningPage() {
               {errorMessage && <Alert variant="danger">{errorMessage}</Alert>}
 
               {game && (
-                <Alert variant="info">
-                  Start: <strong>{game.startStationName}</strong>
-                  {" → "}
-                  Destination: <strong>{game.destinationStationName}</strong>
-                  <br />
-                  Current score: <strong>{game.score}</strong>
-                </Alert>
-              )}
+  <>
+    <Alert variant="info">
+      Start: <strong>{game.startStationName}</strong> → Destination:{" "}
+      <strong>{game.destinationStationName}</strong>
+      <br />
+      Current score: <strong>{game.score}</strong>
+    </Alert>
+
+    <Alert variant={timeLeft <= 10 ? "warning" : "secondary"}>
+      Time left: <strong>{timeLeft}</strong> seconds
+    </Alert>
+  </>
+)}
 
               {network && (
                 <>
+                  <NetworkMap
+                   stations={network.stations}
+                   segments={[]}
+                   segmentLines={[]}
+                   showSegments={false}
+                  />
                   <h2 className="h4 mt-4">Available segments</h2>
 
                   <ListGroup className="mb-4">
@@ -147,7 +176,7 @@ function PlanningPage() {
                   <Button
                     variant="primary"
                     onClick={handleSubmitRoute}
-                    disabled={submitting || selectedSegmentIds.length === 0}
+                    disabled={submitting}
                   >
                     {submitting ? "Submitting..." : "Submit route"}
                   </Button>

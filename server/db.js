@@ -76,6 +76,7 @@ async function createSchema(db) {
       destination_station_id INTEGER NOT NULL,
       status TEXT NOT NULL,
       score INTEGER NOT NULL,
+      minimum_distance INTEGER NOT NULL DEFAULT 0,
       created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,
       FOREIGN KEY (user_id) REFERENCES users(id),
       FOREIGN KEY (start_station_id) REFERENCES stations(id),
@@ -317,16 +318,16 @@ async function seedPreviousGames(db) {
   const existingGames = await db.get("SELECT COUNT(*) AS count FROM games");
 
   if (existingGames.count === 0) {
-    await db.run(
-      `
-      INSERT INTO games 
-        (id, user_id, start_station_id, destination_station_id, status, score)
-      VALUES
-        (1, 1, 1, 10, 'completed', 24),
-        (2, 1, 5, 12, 'completed', 18),
-        (3, 2, 11, 4, 'completed', 21)
-      `
-    );
+   await db.run(
+  `
+  INSERT INTO games
+    (id, user_id, start_station_id, destination_station_id, status, score, minimum_distance)
+  VALUES
+    (1, 1, 1, 10, 'completed', 24, 4),
+    (2, 1, 5, 12, 'completed', 18, 4),
+    (3, 2, 11, 4, 'completed', 21, 4)
+  `
+  );
   }
 }
 

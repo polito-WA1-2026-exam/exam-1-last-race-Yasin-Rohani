@@ -11,6 +11,7 @@ import {
   getRanking,
   createGame,
   getGameById,
+  getGameSteps,
   selectRandomStartAndDestination,
   submitRoute
 } from "./dao.js";
@@ -167,10 +168,15 @@ app.get("/api/games/:gameId", isLoggedIn, async (req, res) => {
       return res.status(404).json({ error: "Game not found" });
     }
 
-    return res.json(game);
+    const steps = await getGameSteps(gameId);
+
+return res.json({
+  ...game,
+  steps
+});
   } catch (err) {
-    console.error("POST /api/games/:id/route failed:", err);
-    return res.status(500).json({ error: "Cannot submit route" });
+      console.error("GET /api/games/:gameId failed:", err);
+      return res.status(500).json({ error: "Cannot load game" });
   }
 });
 
